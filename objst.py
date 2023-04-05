@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr  5 04:04:37 2023
+
+@author: Optimus
+"""
+
 #
 # objst.py - simple implementation of object store Web API
 #
@@ -164,13 +172,10 @@ api.add_resource(ObjectStore, '/')
 #
 # Configure rate limiting
 #
-
-limiter = Limiter(
-    get_remote_address,
-    app,
-    default_limits=["10/second","50/hour"]
-)
+limiter = Limiter(get_remote_address, app=app,default_limits=["10/second"])
 
 
 if __name__ == '__main__':
+    #limiter = Limiter(get_remote_address)
+    limiter.init_app(app)
     app.run(host='0.0.0.0')
