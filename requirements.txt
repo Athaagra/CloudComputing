@@ -1,0 +1,15 @@
+#Python Requirements
+
+# You can install all of these requirements with the following shell command
+# python -m pip install -r requirements.txt
+
+#numpy
+Flask==2.0.3
+Flask_limiter==1.5
+flask_restful==0.3.9
+#msgpack==1.0.0
+#protobuf==3.18.3
+#PyYAML==5.4
+
+#You will also need the protoc compiler from
+#https://developers.google.com/protocol-buffers/docs/downloads
