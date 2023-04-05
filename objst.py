@@ -173,7 +173,7 @@ api.add_resource(ObjectStore, '/')
 #
 # Configure rate limiting
 #
-limiter = Limiter(get_remote_address, app=app)
+limiter = Limiter(app,key_func=get_remote_address)
 #,default_limits=["10/second"])
 
 
