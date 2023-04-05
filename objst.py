@@ -102,9 +102,9 @@ class DataDir:
         for f in filter(lambda f: f.is_file(), self.datadir.iterdir()):
             f.unlink()
 
-
+print(data_path)
 datadir = DataDir(data_path)
-
+print(datadir)
 
 #
 # API endpoints
