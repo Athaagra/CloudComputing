@@ -1,0 +1,5 @@
+FROM registry.access.redhat.com/ubi7/ubi
+RUN yum install -y haproxy iproute 
+COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+EXPOSE 80 
+ENTRYPOINT haproxy -db -f /etc/haproxy/haproxy.cfg
