@@ -1,0 +1,105 @@
+#apiVersion: apps/v1
+kind: Deployment
+  {{- with .Values.customblock.author.question}}
+  questions:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- range .Values.customblock.author.question}}
+  questions:
+    - {{ . | nindent 4 }}
+  {{- end }}
+  images:
+  {{- range $key,$value := .Values.image}}
+    {{$key}}:{{$value | quote}}
+  {{- end }}
+
+  {{ $myVar := true }}
+  {{- if $myVar }}
+  {{"Hi, I am with Variable True" | nindent 4}}
+  {{- else }}
+  {{"Hi, I am with variable False" | nindent 4}}
+  {{- end}}
+  {{ $scaleVar := .Values.autoscaling.enabled }}
+  {{ if $scaleVar }}
+  {{"Hi, I am variable Scaling True" | nindent 4 }}
+  {{- else}}
+  {{"Hi, I am with variable False" | nindent 4}}
+  {{- end}}
+  {{"Hi team, we are learning - " }}, {{"HEML"}}
+  {{.Values.customblock.author.name}}
+  {{.Values.customblock.author.addresemails}}
+  {{"Values from Chart"}}
+  {{.Chart.AppVersion}}
+  {{.Chart.Keywords}}
+  {{.Chart.Maintainers}}
+  {{.Values.customblock.author.email}}
+  {{.Values.customblock.author.email | default "Hi, I am not Null" | nindent 2}}
+  {{.Values.customblock.author.email | default "Hi, I am not Null" | nindent 4}}
+  {{.Values.customblock.author.email | default "Hi, I am not Null" | upper | nindent 6}}
+  {{.Values.customblock.author.email | default "Hi, I am not Null " | upper | quote | nindent 8}}
+  {{- if .Values.customblock.author.username}}
+  {{"Custom Value is present" | nindent 4}}
+  {{- else}}
+  {{"Custom value boolean is false" | nindent 4}}
+  {{- end}}
+  {{- with .Values.customblock.author.question}}
+  author question:
+  {{- toYaml .| nindent 4 }}
+  {{- else}}
+  {{"Hi, I am without with Block." | nindent 4 }}
+  {{- end}}
+metadata:
+  name: {{ include "my_first_chart.fullname" . }}
+  labels:
+{{ include "my_first_chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "my_first_chart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "my_first_chart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "my_first_chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
