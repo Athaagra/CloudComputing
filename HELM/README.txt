@@ -2,6 +2,7 @@ Helm template
 
 create_charts:
 The initial template generated Helm.
+helm create my_first_chart
 
 my_first_chart:
 The modified template:
