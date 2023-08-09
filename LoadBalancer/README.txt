@@ -78,7 +78,7 @@ output:
 |minikube|docker|docker|192.168.49.2|8443|v1.21.2|Running|1|
 
 VMware
-VM->Edit->Virtual Network Editor->Host Only range 192.168.49.0 - 192.168.49.255 Apply DHCP
+VM->Edit->Virtual Network Editor->Host Only range 192.168.49.0 - 192.168.49.100 Apply DHCP (the Load Balancer ip shoud contained in the range except the minikube ip)
 VM->Setings->Network Adapter-> Custom: Specific virtual network
 
 sudo minikube addons list
@@ -86,8 +86,8 @@ sudo minikube addons list
 sudo minikube addons enable metallb
 
 sudo minikube addons configure metallb
-192.168.49.5
-192.168.49.6
+192.168.49.100
+192.168.49.110
 
 sudo minikube get configmap/config -n metallb-system -o yaml
 
@@ -98,5 +98,10 @@ kubectl get deployments,pods -l app=nginx
 kubectl expose deployment nginx --type LoadBalancer --port 80 --target-port 80
 
 kubectl get services -l app=nginx
+|nginx     LoadBalancer     10.96.5.59     192.168.49.100      80:32110/TCP    10m
 
-curl 192.168.49.5
+External IPs
+Cluster IP:
+curl 192.168.49.2:32110
+Load Balancer IP:
+curl 192.168.49.100:80
