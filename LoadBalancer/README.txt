@@ -66,3 +66,37 @@ sudo cp minikube /usr/local/bin/minikube
 sudo chmod 755 /usr/local/bin/minikube
 
 minikube version
+
+#### Start minikube ####
+sudo minikube start --cpus=4 --memory=8g --force
+
+sudo kubectl get pods -n kube-system
+
+sudo minikube profile list
+
+output:
+|minikube|docker|docker|192.168.49.2|8443|v1.21.2|Running|1|
+
+VMware
+VM->Edit->Virtual Network Editor->Host Only range 192.168.49.0 - 192.168.49.255 Apply DHCP
+VM->Setings->Network Adapter-> Custom: Specific virtual network
+
+sudo minikube addons list
+
+sudo minikube addons enable metallb
+
+sudo minikube addons configure metallb
+192.168.49.5
+192.168.49.6
+
+sudo minikube get configmap/config -n metallb-system -o yaml
+
+kubectl create deployment nginx --image quay.io/redhattraining/nginx:1.21 --port 80
+
+kubectl get deployments,pods -l app=nginx
+
+kubectl expose deployment nginx --type LoadBalancer --port 80 --target-port 80
+
+kubectl get services -l app=nginx
+
+curl 192.168.49.5
