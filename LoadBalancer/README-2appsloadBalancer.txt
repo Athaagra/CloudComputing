@@ -131,7 +131,7 @@ while true; do curl -s -o /dev/null "http://$GATEWAY_URL/hello"; done
 
 ./istio-${ISTIO_VERSION}/samples/helloworld/loadgen.sh
 
-22) Monitor the traffic with Kiali addon(default as set), grafana is also the same:
+22) Monitor the traffic with Kiali addon(default as set), recommended grafana also:
 istioctl dashboard kiali
 output:
 http://localhost:20001/kiali
