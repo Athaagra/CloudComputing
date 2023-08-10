@@ -106,7 +106,7 @@ helloworld   ClusterIP   10.101.60.68   <none>        5000/TCP   3m
 kubectl apply -f \
 istio-${ISTIO_VERSION}/samples/hellowordl/helloworld-gateway.yaml
 
-18) Verify that the gateway and virtual services are deployed
+18) Verify that the gateway and virtual services are deployed the gateway(refers to the ip of each apllication and a port traffic(ingress rul1) with a domain name) the virtual services make use of the gateways or destination rule to simulate a load balancer(Virtual Services,weight 10% of connections visit the v1 Hello World 90% of connections visit the v2 Hello Wolrd):
 kubectl get gateways,virtualservices
 
 19) Get the URL prefixes:
