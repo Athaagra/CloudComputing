@@ -66,6 +66,7 @@ sudo cp minikube /usr/local/bin/minikube
 sudo chmod 755 /usr/local/bin/minikube
 
 minikube version
+sudo apt install conntrack
 
 #### Start minikube ####
 sudo minikube start --cpus=4 --memory=8g --force
