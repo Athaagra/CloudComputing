@@ -1,0 +1,138 @@
+sudo apt-get update
+sudo apt-get install rabbitmq-server
+sudo service rabbtimq-server start
+sudo rabbitmq-plugins enable rabbitmq_management
+
+
+
+sudo rabbitmqctl add_user pete pete
+sudo rabbitmqctl set_permissions -p / pete ".*" ".*" ".*"
+sudo rabbitmqctl set_user_tags pete management administrator
+
+
+ifconfig
+
+check the ip of the vm->
+-------------------------
+http:192.168.0.16:15672
+
+visit rabbitmq inside the vm-> 
+curl localhost:15672
+<!doctype html>
+<meta http-equiv="X-UA-Compatible" content="ΙΕ-edge" />
+<html>
+  <head>
+    <title>RabbitMQ Management</title>
+    <script src="js/ejs.min.js" type="text/javascript"></script>
+    <script src="js/jquery-1.6.4.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="outer"></div>
+    <div id="debug"></div>
+    <div id="scratch"></div>
+  </body>
+</html>
+
+
+
+
+##############POST MESSAGE##########################
+<!DOCTYPE html>
+<html>
+<body>
+<h2>RabbitMQ REST API - An Exchange Message</h2>
+
+URL/API Call: <input type="text" id="theurl" value="http://192.168.0.116:15672/api/exchanges/%2f/"  size = "50" /> <br><br>
+Exchange Name:   <input type="text" id="exname" value="webex"/> <br><br>
+Routing Key:   <input type="text" id="rkey" value="webq1"/> <br><br>
+Value to Send:   <input type="text" id="theval" value="11.1"/> <br><br>
+
+<button type="button" onclick="sendoutput()">Send Output</button>
+<br>
+
+<hr>
+<p id="demo"></p>
+
+<script>
+function sendoutput() {
+	// RabbitMQ username and password
+	var username = "pete"; 
+	var password = "pete";  
+	
+	var xhttp = new XMLHttpRequest();
+	
+	var fullurl = document.getElementById("theurl").value + document.getElementById("exname").value + "//publish";
+	
+	xhttp.open("POST", fullurl, true,username,password);
+
+	xhttp.setRequestHeader("Content-Type","application/jsonp");
+	
+	var rkey = document.getElementById("r").value
+	var theval = document.getElementById("theval").value
+	var params = JSON.stringify({"properties":{},"routing_key":rkey,"payload":theval,"payload_encoding":"string"});
+	
+	// Define a handler function when the response comes back
+	xhttp.onreadystatechange = function() {
+		// Get the response and put on it the screen
+		if (this.readyState == 4 ) {	
+			document.getElementById("demo").innerHTML = "Result=" +xhttp.responseText;
+		}
+	}
+	xhttp.send(params);
+}
+</script>
+</body>
+</html>
+
+###### Receive a Message #########
+<!DOCTYPE html>
+<html>
+<body>
+<h2>RabbitMQ REST API - Get Queue Message</h2>
+
+URL/API Call: <input type="text" id="theurl" value="http://192.168.0.116:15672/api/queues/%2f/"  size = "50" /> <br><br>
+Queue Name:   <input type="text" id="qname" value="webex"/> <br><br>
+Requeue: <input type="text" id="rq" value="true" /> (false = remove old values)<br><br>
+Message Count: <input type="text" id="mcount" value="5"/> <br><br>
+<button type="button" onclick="sendoutput()">Get Message(s)</button>
+<br>
+
+<hr>
+<p id="demo"></p>
+
+<script>
+function sendoutput() {
+	// RabbitMQ username and password
+	var username = "pete";
+	var password = "pete";
+	var xhttp = new XMLHttpRequest();
+	
+    var fullurl = document.getElementById("theurl").value + document.getElementById("qname").value + "//get";
+	
+	xhttp.open("POST", fullurl, true,username,password);
+	
+	// change to your Auth username and password
+
+	xhttp.setRequestHeader("Content-Type","application/jsonp");
+
+	var rq = document.getElementById("rq").value;
+	var mcount = document.getElementById("mcount").value;
+	var params = JSON.stringify({"count":mcount,"requeue":rq,"encoding":"auto","truncate":"50000"});
+	// Define a handler function when the response comes back
+	xhttp.onreadystatechange = function() {
+		// Get the response and put on it the screen
+		if (this.readyState == 4 ) {	
+			document.getElementById("demo").innerHTML = "Result=" +xhttp.responseText;
+		}
+	}
+
+	xhttp.send(params);
+}
+
+</script>
+</body>
+</html>
+
+
+
+
